@@ -1,0 +1,54 @@
+diff --git a/dwm.c b/dwm.c
+index 4465af1..6db7887 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -201,7 +201,7 @@ static void setfocus(Client *c);
+ static void setfullscreen(Client *c, int fullscreen);
+ static void setlayout(const Arg *arg);
+ static void setmfact(const Arg *arg);
+-static void setup(void);
++static void setup(int argc, char *argv[]);
+ static void seturgent(Client *c, int urg);
+ static void showhide(Client *c);
+ static void sigchld(int unused);
+@@ -1527,7 +1527,7 @@ setmfact(const Arg *arg)
+ }
+ 
+ void
+-setup(void)
++setup(int argc, char *argv[])
+ {
+ 	int i;
+ 	XSetWindowAttributes wa;
+@@ -1570,6 +1570,13 @@ setup(void)
+ 	scheme = ecalloc(LENGTH(colors), sizeof(Clr *));
+ 	for (i = 0; i < LENGTH(colors); i++)
+ 		scheme[i] = drw_scm_create(drw, colors[i], 3);
++	if (argc > 0) {
++		Clr *cuscol = ecalloc(1, sizeof(Clr));
++		drw_clr_create(drw, cuscol, argv[1]);
++		scheme[SchemeSel][ColBg] = cuscol[0];
++		scheme[SchemeSel][ColBorder] = cuscol[0];
++	}
++
+ 	/* init bars */
+ 	updatebars();
+ 	updatestatus();
+@@ -2129,14 +2136,14 @@ main(int argc, char *argv[])
+ {
+ 	if (argc == 2 && !strcmp("-v", argv[1]))
+ 		die("dwm-"VERSION);
+-	else if (argc != 1)
+-		die("usage: dwm [-v]");
++	//else if (argc != 1)
++		//die("usage: dwm [-v]");
+ 	if (!setlocale(LC_CTYPE, "") || !XSupportsLocale())
+ 		fputs("warning: no locale support\n", stderr);
+ 	if (!(dpy = XOpenDisplay(NULL)))
+ 		die("dwm: cannot open display");
+ 	checkotherwm();
+-	setup();
++	setup(argc, argv);
+ #ifdef __OpenBSD__
+ 	if (pledge("stdio rpath proc exec", NULL) == -1)
+ 		die("pledge");
