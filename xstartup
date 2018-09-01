@@ -1,0 +1,25 @@
+#!/bin/sh
+
+xrdb $HOME/.Xresources
+xsetroot -solid grey
+
+# I call vncserver with the -name argument. The name is of format
+# <DestopName>_<COLOR>. E.g.: Tenor_007722. I send the color to a patched DWM,
+# which sets the selection color to the one in VNC name.
+# The dwm_status command below also recognizes this name format, and displays
+# only the desktop name part in the status
+COLOR=$(perl -e '$ARGV[0] =~ m/([a-zA-Z0-9]+)(_([a-zA-Z0-9]+))?/; print "$3"' $VNCDESKTOP)
+
+while true; do
+  # If we don't explicitly kill the dwm_status thread, it keeps running even
+  # after vncserver -kill kills the VNC. So if the display dies, exit xstartup
+  if xhost > /dev/null 2>&1 ; then
+    /home/mahesh/bin/dwm_status
+    sleep 10
+  else
+    echo Display for ${VNCDESKTOP} on ${DISPLAY} died. Exiting...
+    exit 0
+  fi
+done &
+
+/home/mahesh/apps/bin/dwm "#${COLOR}"

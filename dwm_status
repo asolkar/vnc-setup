@@ -1,0 +1,6 @@
+#!/bin/bash
+
+DESKTOPNAME=$(perl -e '$ARGV[0] =~ m/([a-zA-Z0-9]+)(_([a-zA-Z0-9]+))?/; print "$1"' $VNCDESKTOP)
+sts=$(date +"%a %D %I:%M%p")
+ipa=$(hostname -I | cut -f1 -d" ")
+xsetroot -name " $sts [$DESKTOPNAME:$ipa]"
