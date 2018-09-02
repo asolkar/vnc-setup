@@ -14,3 +14,9 @@ For example, there are two examples for *Client* projects and *Hobby* projects.
 
 -----
 ![Hobby](images/hobby_example.png "Hobby VNC")
+
+There can be multiple VNCs with different colors.
+
+-----
+![Stack of VNC sessions](images/example.png "Stack of VNC sessions")
+
