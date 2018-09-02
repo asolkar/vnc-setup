@@ -1,0 +1,40 @@
+#!/bin/bash
+
+OPTS=`getopt -o hn:c:p: --long help,name:,color:,port: -n 'parse-options' -- "$@"`
+
+if [ $? != 0 ] ; then echo "Failed parsing options." >&2 ; exit 1 ; fi
+
+eval set -- "$OPTS"
+
+HELP=false
+NAME=$(hostname)
+COLOR="837642"
+PORT=63
+
+while true; do
+  case "$1" in
+    -h | --help )   HELP=true; shift ;;
+    -n | --name )   NAME="$2"; shift; shift ;;
+    -c | --color )  COLOR="$2"; shift; shift ;;
+    -p | --port )   PORT="$2"; shift; shift ;;
+    -- ) shift; break ;;
+    * ) break ;;
+  esac
+done
+
+if ${HELP}; then
+  cat <<HELP
+  startvnc [options]
+
+  Options:
+
+    -h | --help     : Print this help message
+    -n | --name     : Name of the VNC session
+    -c | --color    : Color in desktop environment
+    -p | --port     : VNC port
+HELP
+  exit 0
+fi
+
+/opt/tigervnc/usr/bin/vncserver -geometry 2880x1800 :${PORT} -name ${NAME}_${COLOR}
+
